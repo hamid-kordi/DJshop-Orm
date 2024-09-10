@@ -2,6 +2,11 @@ from typing import Iterable
 from django.db import models
 import hashlib
 
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+
+from media.exceptions import DuplicateImageException
+
 
 # Create your models here.
 class Image(models.Model):
@@ -28,3 +33,14 @@ class Image(models.Model):
 
             self.file_hash = hasher.hexdigest()
         super().save(*args, **kwargs)
+
+
+@receiver(pre_save, sender=Image)
+def check_duplicate_hash(sender, instance, **kwargs):
+    existed = (
+        Image.objects.filter(file_hash=instance.file_hash)
+        .exclude(pk=instance.pk)
+        .exists()
+    )
+    if existed:
+        raise DuplicateImageException("Duplicate")
