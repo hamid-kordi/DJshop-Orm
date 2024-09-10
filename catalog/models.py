@@ -49,7 +49,7 @@ class ProductClass(models.Model):
     slug = models.SlugField(unique=True, allow_unicode=True)
     track_stock = models.BooleanField(default=True)
     require_shop = models.BooleanField(default=True)
-    options = models.ForeignKey("OptionGroup", blank=True)
+    options = models.ForeignKey("OptionGroup", blank=True,on_delete=models.CASCADE)
 
     def __str__(self) -> str:
         return self.title
