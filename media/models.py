@@ -11,7 +11,9 @@ from media.exceptions import DuplicateImageException
 # Create your models here.
 class Image(models.Model):
     title = models.CharField(max_length=256, null=True, blank=True)
-    image = models.ImageField(width_field='width', height_field='height', upload_to="images/")
+    image = models.ImageField(
+        width_field="width", height_field="height", upload_to="images/"
+    )
     width = models.IntegerField(editable=False)
     height = models.IntegerField(editable=False)
 
